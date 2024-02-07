@@ -1,0 +1,36 @@
+openapi: 3.0.0
+info:
+  title: Sri Lankan Phone Number Validation API
+  description: This API validates if a given phone number is in the Sri Lankan format.
+  version: "1.0.0"
+servers:
+  - url: http://localhost:5000
+    description: Development server
+paths:
+  /validate:
+    get:
+      summary: Validates a Sri Lankan phone number
+      description: Returns a JSON object indicating whether the phone number is valid.
+      parameters:
+        - in: query
+          name: phone_number
+          required: true
+          schema:
+            type: string
+          description: The phone number to validate
+      responses:
+        '200':
+          description: A JSON object with the validation result
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  valid:
+                    type: boolean
+                    description: Indicates if the phone number is valid or not
+                  message:
+                    type: string
+                    description: A message detailing the validation result
+        '400':
+          description: Bad Request - Invalid Request Parameters
