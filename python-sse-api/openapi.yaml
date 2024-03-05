@@ -1,36 +1,36 @@
-openapi: 3.0.0
+openapi: 3.0.3
 info:
-  title: Sri Lankan Phone Number Validation API
-  description: This API validates if a given phone number is in the Sri Lankan format.
-  version: "1.0.0"
+  title: Simple SSE API
+  description: This API streams real-time data to clients using Server-Sent Events (SSE).
+  version: 1.0.0
 servers:
-  - url: http://localhost:5000
+  - url: http://127.0.0.1:5000
     description: Development server
 paths:
-  /validate:
+  /stream:
     get:
-      summary: Validates a Sri Lankan phone number
-      description: Returns a JSON object indicating whether the phone number is valid.
-      parameters:
-        - in: query
-          name: phone_number
-          required: true
-          schema:
-            type: string
-          description: The phone number to validate
+      summary: Streams real-time data to the client
+      description: Connects to the server to receive real-time data updates using Server-Sent Events (SSE).
+      operationId: streamRealTimeData
       responses:
         '200':
-          description: A JSON object with the validation result
+          description: A continuous stream of data events.
           content:
-            application/json:
+            text/event-stream:
               schema:
-                type: object
-                properties:
-                  valid:
-                    type: boolean
-                    description: Indicates if the phone number is valid or not
-                  message:
-                    type: string
-                    description: A message detailing the validation result
-        '400':
-          description: Bad Request - Invalid Request Parameters
+                type: string
+                example: "data:{'time': '2024-03-05 12:34:56', 'value': 1615123456.123}\n\n"
+      x-summary: Stream Endpoint
+components:
+  schemas:
+    Event:
+      type: object
+      properties:
+        time:
+          type: string
+          format: date-time
+          description: The server time when the event was generated.
+        value:
+          type: number
+          format: float
+          description: A floating point number representing the value at the given time.
