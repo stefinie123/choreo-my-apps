@@ -1,0 +1,94 @@
+openapi: 3.0.0
+info:
+  title: Sample API
+  description: This is a sample API to demonstrate OpenAPI specification.
+  version: 1.0.0
+servers:
+  - url: https://api.sample.com/v1
+paths:
+  /test:
+    get:
+      summary: Test endpoint
+      description: Returns a simple message for testing purposes.
+      responses:
+        '200':
+          description: A successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Test endpoint reached successfully."
+    post:
+      summary: Test endpoint with POST
+      description: Accepts a message and returns it.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  example: "This is a test message."
+      responses:
+        '200':
+          description: A successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "This is a test message."
+  /multiple/lua/scripts:
+    get:
+      summary: Lua scripts endpoint
+      description: Returns a list of Lua scripts.
+      responses:
+        '200':
+          description: A successful response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    scriptId:
+                      type: string
+                      example: "script1"
+                    content:
+                      type: string
+                      example: "print('Hello, Lua!')"
+    post:
+      summary: Add Lua script
+      description: Accepts a new Lua script and returns its ID.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                content:
+                  type: string
+                  example: "print('Hello, Lua!')"
+      responses:
+        '201':
+          description: Script created successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  scriptId:
+                    type: string
+                    example: "script2"
+                  content:
+                    type: string
+                    example: "print('Hello, Lua!')"
