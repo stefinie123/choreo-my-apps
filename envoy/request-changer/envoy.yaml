@@ -41,11 +41,64 @@ static_resources:
           - name: lua_filter_with_custom_name_0
             typed_config:
               "@type": type.googleapis.com/envoy.extensions.filters.http.lua.v3.Lua
-              default_source_code:
-                inline_string: |
-                  function envoy_on_request(request_handle)
-                    request_handle:headers():add("changer", "changertest")
+              inlineCode: |
+                local json = require("home.wso2.lib.json")
+
+                -- Base64 decoding function
+                local function base64_decode(data)
+                  local b = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/'
+                  data = string.gsub(data, '[^'..b..'=]', '')
+                  return (data:gsub('.', function(x)
+                      if (x == '=') then return '' end
+                      local r,f='',(b:find(x)-1)
+                      for i=6,1,-1 do r=r..(f%2^i-f%2^(i-1)>0 and '1' or '0') end
+                      return r;
+                    end):gsub('%d%d%d?%d?%d?%d?%d?%d?', function(x)
+                      if (#x ~= 8) then return '' end
+                      local c=0
+                      for i=1,8 do c=c+(x:sub(i,i)=='1' and 2^(8-i) or 0) end
+                      return string.char(c)
+                    end))
+                end
+
+                function envoy_on_request(request_handle)
+                  local headers = {
+                    [":method"] = "GET",
+                    [":path"] = "/extcall",
+                    [":authority"] = "eosm2szibnsw86b.m.pipedream.net"
+                  }
+
+                  local response_headers, response_body = request_handle:httpCall(
+                    "external_service_cluster",
+                    headers,
+                    "",
+                    5000
+                  )
+
+                  request_handle:logInfo(response_body)
+
+                  if response_headers[":status"] == "200" then
+                    local json_response = json.decode(response_body)
+                    -- request_handle:logInfo(json_response)
+                    
+                    -- Add headers from the response
+                    for _, header in ipairs(json_response.headersToAdd) do
+                      request_handle:headers():add(header.key, header.value)
+                    end
+
+                    -- Set the new body
+                    local decoded_body = base64_decode(json_response.body)
+                    request_handle:logInfo(decoded_body)
+                    local content_length = request_handle:body(true):setBytes(decoded_body)
+                    request_handle:headers():replace("content-length", content_length)
+
+                  else
+                    request_handle:respond(
+                      {[":status"] = response_headers[":status"]},
+                      "Failed to fetch data from external service"
+                    )
                   end
+                end
           - name: lua_filter_with_custom_name_1
             typed_config:
               "@type": type.googleapis.com/envoy.extensions.filters.http.lua.v3.Lua
@@ -65,6 +118,22 @@ static_resources:
             address:
               socket_address:
                 address: malintha.requestcatcher.com
+                port_value: 443
+    transport_socket:
+      name: envoy.transport_sockets.tls
+      typed_config:
+        "@type": type.googleapis.com/envoy.extensions.transport_sockets.tls.v3.UpstreamTlsContext
+  - name: external_service_cluster
+    type: STRICT_DNS
+    lb_policy: ROUND_ROBIN
+    load_assignment:
+      cluster_name: external_service_cluster
+      endpoints:
+      - lb_endpoints:
+        - endpoint:
+            address:
+              socket_address:
+                address: eosm2szibnsw86b.m.pipedream.net
                 port_value: 443
     transport_socket:
       name: envoy.transport_sockets.tls
