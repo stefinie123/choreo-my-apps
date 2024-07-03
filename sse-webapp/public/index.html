@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SSE Example</title>
+</head>
+<body>
+  <h1>Server-Sent Events Example</h1>
+  <div id="messages"></div>
+
+  <script>
+    const eventSource = new EventSource('/events');
+
+    eventSource.onmessage = (event) => {
+      const data = JSON.parse(event.data);
+      const messageDiv = document.getElementById('messages');
+      const message = document.createElement('div');
+      message.textContent = `${data.timestamp}: ${data.message}`;
+      messageDiv.appendChild(message);
+    };
+  </script>
+</body>
+</html>

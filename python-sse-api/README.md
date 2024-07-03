@@ -1,13 +1,3 @@
-# Sri Lankan Phone Number Validation API
-
-This project provides a REST API for validating whether a given phone number is in the correct Sri Lankan format. It uses Flask for the web server and offers a simple OpenAPI specification for API documentation and integration purposes.
-
-## Features
-
-- Validate Sri Lankan phone numbers through a REST API.
-- GET request endpoint to easily validate phone numbers.
-- JSON responses indicating validation results.
-- OpenAPI (Swagger) documentation for API specification.
 
 ## Requirements
 
@@ -46,22 +36,18 @@ pip install -r requirements.txt
 
 1. Start the Flask application:
 
-python phone_number_api.py
+python app.py
 
 2. The API is now running on `http://localhost:5000`.
 
 ## Using the API
 
-To validate a Sri Lankan phone number, make a GET request to the `/validate` endpoint with the `phone_number` query parameter.
-
 Example using curl:
 
-curl "http://localhost:5000/validate?phone_number=+947XXXXXXXX"
+curl "http://localhost:5000/stream"
 
 Response:
 
 ```json
-{
-  "valid": true,
-  "message": "Valid Sri Lankan phone number."
-}
+
+```
