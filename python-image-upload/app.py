@@ -19,5 +19,18 @@ def upload_image():
 
     return jsonify({"message": "Image received and logged."})
 
+@app.route('/upload-raw', methods=['POST'])
+def upload_raw_image():
+    if not request.data:
+        return jsonify({"error": "No file uploaded."}), 400
+
+    # Read the raw data and convert it to a base64 string
+    base64_image = base64.b64encode(request.data).decode('utf-8')
+
+    # Log the base64 encoded string
+    print(base64_image)
+
+    return jsonify({"message": "Image received and logged."})
+
 if __name__ == '__main__':
     app.run(port=3000)

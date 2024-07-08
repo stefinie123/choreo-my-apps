@@ -9,7 +9,7 @@ servers:
 paths:
   /upload:
     post:
-      summary: Upload an image
+      summary: Upload an image (multipart/form-data)
       description: Uploads an image and logs its content as a base64 encoded string.
       requestBody:
         required: true
@@ -22,6 +22,39 @@ paths:
                   type: string
                   format: binary
                   description: The image file to upload.
+      responses:
+        '200':
+          description: Image received and logged.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Image received and logged.
+        '400':
+          description: No file uploaded.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: No file uploaded.
+  /upload-raw:
+    post:
+      summary: Upload an image (image/*)
+      description: Uploads an image with content type image/* and logs its content as a base64 encoded string.
+      requestBody:
+        required: true
+        content:
+          image/*:
+            schema:
+              type: string
+              format: binary
+              description: The raw image data.
       responses:
         '200':
           description: Image received and logged.
