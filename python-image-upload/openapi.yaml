@@ -1,0 +1,45 @@
+openapi: 3.0.1
+info:
+  title: Image Upload Service
+  description: A simple service to upload images and log their content as a base64 encoded string.
+  version: 1.0.0
+servers:
+  - url: http://localhost:3000
+    description: Local server
+paths:
+  /upload:
+    post:
+      summary: Upload an image
+      description: Uploads an image and logs its content as a base64 encoded string.
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                image:
+                  type: string
+                  format: binary
+                  description: The image file to upload.
+      responses:
+        '200':
+          description: Image received and logged.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Image received and logged.
+        '400':
+          description: No file uploaded.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: No file uploaded.
