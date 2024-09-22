@@ -1,0 +1,152 @@
+openapi: 3.0.0
+info:
+  title: Payment API
+  description: API for managing payments
+  version: 1.0.0
+servers:
+  - url: https://api.paymentapp.com/v1
+    description: Production Server
+  - url: https://sandbox.api.paymentapp.com/v1
+    description: Sandbox Server
+paths:
+  /payments:
+    post:
+      summary: Create a new payment
+      description: Initiates a payment transaction.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                amount:
+                  type: number
+                  description: Amount to be charged in USD
+                  example: 150.00
+                currency:
+                  type: string
+                  description: Currency code
+                  example: USD
+                payment_method:
+                  type: string
+                  description: The method of payment (e.g., card, bank_transfer)
+                  example: card
+                customer_id:
+                  type: string
+                  description: ID of the customer making the payment
+                  example: cust_12345
+              required:
+                - amount
+                - currency
+                - payment_method
+                - customer_id
+      responses:
+        '201':
+          description: Payment created successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  payment_id:
+                    type: string
+                    example: pay_abc123
+                  status:
+                    type: string
+                    example: pending
+                  created_at:
+                    type: string
+                    format: date-time
+                    example: 2023-09-22T10:45:00Z
+        '400':
+          description: Invalid request parameters
+        '500':
+          description: Server error
+    get:
+      summary: List all payments
+      description: Retrieve a list of all payments made.
+      parameters:
+        - name: limit
+          in: query
+          description: The number of payments to retrieve
+          schema:
+            type: integer
+            example: 10
+        - name: offset
+          in: query
+          description: The starting point for retrieving payments
+          schema:
+            type: integer
+            example: 0
+      responses:
+        '200':
+          description: List of payments
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    payment_id:
+                      type: string
+                      example: pay_abc123
+                    amount:
+                      type: number
+                      example: 150.00
+                    currency:
+                      type: string
+                      example: USD
+                    status:
+                      type: string
+                      example: completed
+                    created_at:
+                      type: string
+                      format: date-time
+                      example: 2023-09-22T10:45:00Z
+        '500':
+          description: Server error
+  /payments/{payment_id}:
+    get:
+      summary: Retrieve a payment
+      description: Fetch details of a payment transaction by payment ID.
+      parameters:
+        - name: payment_id
+          in: path
+          required: true
+          description: Unique identifier for the payment
+          schema:
+            type: string
+            example: pay_abc123
+      responses:
+        '200':
+          description: Payment details retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  payment_id:
+                    type: string
+                    example: pay_abc123
+                  status:
+                    type: string
+                    example: completed
+                  amount:
+                    type: number
+                    example: 150.00
+                  currency:
+                    type: string
+                    example: USD
+                  customer_id:
+                    type: string
+                    example: cust_12345
+                  created_at:
+                    type: string
+                    format: date-time
+                    example: 2023-09-22T10:45:00Z
+        '404':
+          description: Payment not found
+        '500':
+          description: Server error
