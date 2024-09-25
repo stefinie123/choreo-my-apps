@@ -11,5 +11,5 @@ proxy:
    # This is only applicable to REST endpoint types.
    # The path should be relative to the docker context.
   schemaFilePath: accounts-api.yaml
-  docFilePath: /docs/apiDocs 
-  thumbnailPath: /resources/images/thumbnail.png
+  thumbnailPath: ""
+  docPath: ""
