@@ -37,7 +37,7 @@ tags:
       description: Find out more
       url: http://swagger.io
 paths:
-  /pet:
+  /pet/{abc}:
     put:
       tags:
         - pet
