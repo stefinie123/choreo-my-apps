@@ -1,0 +1,15 @@
+# +required The configuration file schema version
+schemaVersion: 1.1
+
+# +optional Incoming connection details for the component
+proxy:
+# +required Unique name for the endpoint.
+# This name will be used when generating the managed API
+  name: petstore-schema-validate
+   # +optional The path to the schema definition file.
+   # Defaults to wildcard route if not specified.
+   # This is only applicable to REST endpoint types.
+   # The path should be relative to the docker context.
+  schemaFilePath: openapi.yaml
+  thumbnailPath: ""
+  docPath: ""
