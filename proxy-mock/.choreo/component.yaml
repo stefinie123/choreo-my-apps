@@ -1,5 +1,5 @@
 # +required The configuration file schema version
-schemaVersion: 1.0
+schemaVersion: 1.1
 
 # +optional Incoming connection details for the component
 endpoints:
@@ -26,3 +26,10 @@ endpoints:
     # This is only applicable to REST and WS endpoint types.
     # The path should be relative to the docker context.
     schemaFilePath: openapi.yaml
+proxy:
+  type: REST
+  schemaFilePath: openapi.yaml
+  docPath: ''
+  thumbnailPath: ''
+  networkVisibilities:
+    - Public
