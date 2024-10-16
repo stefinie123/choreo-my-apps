@@ -3,7 +3,7 @@ info:
   title: Simple Finance API
   description: A simple API to manage financial accounts and transactions
   version: 1.0.0
-basePath: /v1
+basePath: /v1-new
 servers:
   - url: https://api.simplefinance.com/v1
     description: Main API server
